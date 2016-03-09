@@ -32,7 +32,7 @@ define constant $namespace-x500    = as(<uuid>, "6ba7b812-9dad-11d1-80b4-00c04fd
 
 define method make-uuid3(namespace :: <uuid>, name :: <string>) => (uuid :: <uuid>)
   let uuid-data = make-uuid-data-with-hash(namespace, name, md5);
-  set-rfc4122-bits(uuid-data, 3);
+  set-rfc4122-bits(uuid-data, #x30);
   make(<uuid>, data: uuid-data);
 end;
 
@@ -41,13 +41,13 @@ define method make-uuid4() => (uuid :: <uuid>)
   for ( i :: <integer> from 0 below 16 )
     element-setter(random(255), uuid-data, i);
   end;
-  set-rfc4122-bits(uuid-data, 4);
+  set-rfc4122-bits(uuid-data, #x40);
   make(<uuid>, data: uuid-data);
 end;
 
 define method make-uuid5(namespace :: <uuid>, name :: <string>) => (uuid :: <uuid>)
   let uuid-data = make-uuid-data-with-hash(namespace, name, sha1);
-  set-rfc4122-bits(uuid-data, 5);
+  set-rfc4122-bits(uuid-data, #x50);
   make(<uuid>, data: uuid-data);
 end;
 
@@ -73,6 +73,6 @@ define method make-uuid-data-with-hash(namespace :: <uuid>, name :: <string>, ha
 end;
 
 define method set-rfc4122-bits(data :: <byte-vector>, version :: <integer>)
-  data[7] := as(<byte>, version);
-  data[9] := logior(#x80, logand(#x3F, data[9]));
+  data[6] := logior(version, logand(#x0F, data[6]));
+  data[8] := logior(#x80, logand(#x3F, data[8]));
 end;
