@@ -4,6 +4,26 @@ define class <uuid> (<object>)
   constant slot uuid-data :: limited(<byte-vector>, size: 16), required-init-keyword: data:;
 end class;
 
+define method as(class == <string>, uuid :: <uuid>) => (res :: <string>)
+  concatenate-as(<string>, map(method (num)
+                                 integer-to-string(num, base: 16)
+                               end, uuid.uuid-data));
+end;
+
+define method as(class == <uuid>, string :: <string>) => (res :: <uuid>)
+  let sanitized-string = replace-substrings(string, "-", "");
+  assert(sanitized-string.hexadecimal-digit?, "UUID string contains invalid characters");
+  assert(sanitized-string.size == 32, "UUID string should be 32 characters long (excluding dashes)");
+
+  let uuid-data = make(<byte-vector>, size: 16);
+  for ( i :: <integer> from 0 below 16 )
+    let byte = copy-sequence(sanitized-string, start: i, end: i + 2);
+    uuid-data[i] := as(<byte>, string-to-integer(byte, base: 16));
+  end;
+
+  make(<uuid>, data: uuid-data)
+end;
+
 define constant $nil-uuid          = make(<uuid>, data: make(<byte-vector>, size: 16, fill: 0));
 define constant $namespace-dns     = as(<uuid>, "6ba7b810-9dad-11d1-80b4-00c04fd430c8");
 define constant $namespace-url     = as(<uuid>, "6ba7b811-9dad-11d1-80b4-00c04fd430c8");
@@ -41,26 +61,6 @@ end;
 
 define method rfc4122-version(uuid :: <uuid>) => (res :: <integer>)
   uuid.uuid-data[7];
-end;
-
-define method as(class == <string>, uuid :: <uuid>) => (res :: <string>)
-  concatenate-as(<string>, map(method (num)
-                                 integer-to-string(num, base: 16)
-                               end, uuid.uuid-data));
-end;
-
-define method as(class == <uuid>, string :: <string>) => (res :: <uuid>)
-  let sanitized-string = replace-substrings(string, "-", "");
-  assert(sanitized-string.hexadecimal-digit?, "UUID string contains invalid characters");
-  assert(sanitized-string.size == 32, "UUID string should be 32 characters long (excluding dashes)");
-
-  let uuid-data = make(<byte-vector>, size: 16);
-  for ( i :: <integer> from 0 below 16 )
-    let byte = copy-sequence(sanitized-string, start: i, end: i + 2);
-    uuid-data[i] := as(<byte>, string-to-integer(byte, base: 16));
-  end;
-
-  make(<uuid>, data: uuid-data)
 end;
 
 /// Helper methods beyond this line, not exported
