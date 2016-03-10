@@ -5,9 +5,17 @@ define class <uuid> (<object>)
 end class;
 
 define method as(class == <string>, uuid :: <uuid>) => (res :: <string>)
-  concatenate-as(<string>, map(method (num)
-                                 integer-to-string(num, base: 16)
-                               end, uuid.uuid-data));
+  local method h (byte :: <byte>) => (str :: <byte-string>)
+          integer-to-string(byte, base: 16, size: 2)
+        end;
+  let uu = uuid.uuid-data;
+  concatenate(
+              h(uu[0]), h(uu[1]), h(uu[2]), h(uu[3]), "-",
+              h(uu[4]), h(uu[5]), "-",
+              h(uu[6]), h(uu[7]), "-",
+              h(uu[8]), h(uu[9]), "-",
+              h(uu[10]), h(uu[11]), h(uu[12]), h(uu[13]), h(uu[14]),
+              h(uu[15]))
 end;
 
 define method as(class == <uuid>, string :: <string>) => (res :: <uuid>)
@@ -17,7 +25,7 @@ define method as(class == <uuid>, string :: <string>) => (res :: <uuid>)
 
   let uuid-data = make(<byte-vector>, size: 16);
   for ( i :: <integer> from 0 below 16 )
-    let byte = copy-sequence(sanitized-string, start: i, end: i + 2);
+    let byte = copy-sequence(sanitized-string, start: i * 2, end: i * 2 + 2);
     uuid-data[i] := as(<byte>, string-to-integer(byte, base: 16));
   end;
 
@@ -56,11 +64,11 @@ define method \=(uuid1 :: <uuid>, uuid2 :: <uuid>) => (res :: <boolean>)
 end;
 
 define method rfc4122-variant?(uuid :: <uuid>) => (res :: <boolean>)
-  logand(#x80, uuid.uuid-data[9]) = #x80;
+  logand(#x80, uuid.uuid-data[8]) = #x80;
 end;
 
 define method rfc4122-version(uuid :: <uuid>) => (res :: <integer>)
-  uuid.uuid-data[7];
+  ash(logand(uuid.uuid-data[6], #xF0), -4);
 end;
 
 /// Helper methods beyond this line, not exported
