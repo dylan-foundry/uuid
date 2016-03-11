@@ -32,6 +32,7 @@ define test random-uuid-test ()
     let uuid = make-uuid4();
     assert-true(rfc4122-variant?(uuid));
     assert-equal(rfc4122-version(uuid), 4);
+    assert-equal('4', as(<string>, uuid)[14]);
   end;
 end test;
 
