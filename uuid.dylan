@@ -36,7 +36,7 @@ define constant $nil-uuid          = make(<uuid>, data: make(<byte-vector>, size
 define constant $namespace-dns     = as(<uuid>, "6ba7b810-9dad-11d1-80b4-00c04fd430c8");
 define constant $namespace-url     = as(<uuid>, "6ba7b811-9dad-11d1-80b4-00c04fd430c8");
 define constant $namespace-iso-oid = as(<uuid>, "6ba7b812-9dad-11d1-80b4-00c04fd430c8");
-define constant $namespace-x500    = as(<uuid>, "6ba7b812-9dad-11d1-80b4-00c04fd430c8");
+define constant $namespace-x500    = as(<uuid>, "6ba7b814-9dad-11d1-80b4-00c04fd430c8");
 
 define method make-uuid3(namespace :: <uuid>, name :: <string>) => (uuid :: <uuid>)
   let uuid-data = make-uuid-data-with-hash(namespace, name, md5);
