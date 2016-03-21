@@ -6,7 +6,7 @@ end class;
 
 define method as(class == <string>, uuid :: <uuid>) => (res :: <string>)
   local method h (byte :: <byte>) => (str :: <byte-string>)
-          integer-to-string(byte, base: 16, size: 2)
+          as-lowercase(integer-to-string(byte, base: 16, size: 2))
         end;
   let uu = uuid.uuid-data;
   concatenate(
