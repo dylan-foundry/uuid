@@ -75,7 +75,7 @@ end;
 
 define method make-uuid-data-with-hash(namespace :: <uuid>, name :: <string>, hash :: <function>)
   => (data :: limited(<byte-vector>, size: 16))
-  let payload = concatenate(as(<string>, namespace), name);
+  let payload = concatenate(namespace.uuid-data, as(<byte-vector>, name));
   let digest = hash(payload);
   copy-sequence(digest, start: 0, end: 16);
 end;
