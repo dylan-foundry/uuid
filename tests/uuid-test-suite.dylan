@@ -9,14 +9,14 @@ end test;
 
 define test string-conversion-test ()
   let last-uuid = $nil-uuid;
-  for (uuid-string in #["0C2F2F7A-E6BB-11E5-B9D5-53D6E97DB0C8",
-                        "62803720-E6BB-11E5-AF9C-53D6E97DB0C8",
-                        "6A932FBC-E6BB-11E5-80D9-53D6E97DB0C8",
-                        "70445EE0-E6BB-11E5-9A8F-53D6E97DB0C8",
-                        "80EE97A6-E6BB-11E5-B617-53D6E97DB0C8",
-                        "8742DBEE-E6BB-11E5-8ACE-53D6E97DB0C8",
-                        "9038D744-E6BB-11E5-B7E7-53D6E97DB0C8",
-                        "55D0FB76-E6BC-11E5-8541-D181DC1050E5"])
+  for (uuid-string in #["0c2f2f7a-e6bb-11e5-b9d5-53d6e97db0c8",
+                        "62803720-e6bb-11e5-af9c-53d6e97db0c8",
+                        "6a932fbc-e6bb-11e5-80d9-53d6e97db0c8",
+                        "70445ee0-e6bb-11e5-9a8f-53d6e97db0c8",
+                        "80ee97a6-e6bb-11e5-b617-53d6e97db0c8",
+                        "8742dbee-e6bb-11e5-8ace-53d6e97db0c8",
+                        "9038d744-e6bb-11e5-b7e7-53d6e97db0c8",
+                        "55d0fb76-e6bc-11e5-8541-d181dc1050e5"])
     let uuid = as(<uuid>, uuid-string);
     assert-not-equal(uuid, last-uuid);
     assert-equal(uuid-string, as(<string>, uuid));
@@ -25,6 +25,18 @@ define test string-conversion-test ()
     last-uuid := uuid;
 
   end;
+end test;
+
+define test uuid-hash-md5-test ()
+  assert-equal("34ec88ab-c908-3140-acb0-99b0ffdcf005", as(<string>, make-uuid3($namespace-dns, "opendylan.org")));
+  assert-equal("30a7dcc1-0de3-307f-b5b3-c7cbf222c2c0", as(<string>, make-uuid3($namespace-url, "http://opendylan.org/download/")));
+  assert-equal("71e93411-721c-3bb1-8cc8-02eb81eb0042", as(<string>, make-uuid3($namespace-url, "https://github.com/dylan-foundry/uuid")));
+end test;
+
+define test uuid-hash-sha1-test ()
+  assert-equal("1765865c-c208-5ba1-aebf-988a23206d0a", as(<string>, make-uuid5($namespace-dns, "opendylan.org")));
+  assert-equal("76c84493-6ee9-549b-ba5f-23b7f7a0adf9", as(<string>, make-uuid5($namespace-url, "http://opendylan.org/download/")));
+  assert-equal("e4a0a1d0-1200-57d7-92f3-9715e989ba33", as(<string>, make-uuid5($namespace-url, "https://github.com/dylan-foundry/uuid")));
 end test;
 
 define test random-uuid-test ()
@@ -40,4 +52,6 @@ define suite uuid-test-suite ()
   test nil-uuid-test;
   test string-conversion-test;
   test random-uuid-test;
+  test uuid-hash-md5-test;
+  test uuid-hash-sha1-test;
 end suite;
