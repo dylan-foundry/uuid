@@ -155,7 +155,7 @@ Conversion
    :description:
 
      Convert a string into a UUID. The string must only contain
-     hexadecimal digits and, excluding dashes, must only 32
+     hexadecimal digits and, excluding dashes, must be only 32
      characters long.
 
    :example:
