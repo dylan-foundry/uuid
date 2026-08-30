@@ -49,7 +49,7 @@ The UUID module
 .. constant:: $nil-uuid
 
    :type: :class:`<uuid>`
-   :value: `make(<uuid>, data: make(<byte-vector>, size: 16, fill: 0))`
+   :value: ``make(<uuid>, data: make(<byte-vector>, size: 16, fill: 0))``
 
    :description:
 
